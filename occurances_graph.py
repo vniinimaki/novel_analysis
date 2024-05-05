@@ -54,3 +54,4 @@ edge_labels = {(u, v): G[u][v]['weight'] for u, v in G.edges()}
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
 plt.show()
+
