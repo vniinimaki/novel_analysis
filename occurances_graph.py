@@ -55,3 +55,66 @@ nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
 plt.show()
 
+# Calculate the diameter of the graph
+if nx.is_connected(G):
+    diameter = nx.diameter(G)
+    print(f'Diameter: {diameter}')
+else:
+    print('The graph is not connected. Cannot calculate diameter.')
+
+# Calculate the global clustering coefficient of the graph
+global_clustering_coefficient = nx.average_clustering(G)
+print(f'Global Clustering Coefficient: {global_clustering_coefficient}')
+
+# Calculate the average shortest path length (average distance) in the graph
+if nx.is_connected(G):
+    average_distance = nx.average_shortest_path_length(G)
+    print(f'Average Distance: {average_distance}')
+else:
+    print('The graph is not connected. Cannot calculate average distance.')
+
+# Find the smallest and largest components
+components = nx.connected_components(G)
+components = list(components)  # Convert to list for indexing
+smallest_component = min(components, key=len)
+largest_component = max(components, key=len)
+print(f'Smallest Component: {smallest_component}')
+print(f'Largest Component: {largest_component}')
+
+degree_centrality = nx.degree_centrality(G)
+top_3_degree_centrality = sorted(degree_centrality.items(), key=lambda x: x[1], reverse=True)[:3]
+print(f'Top 3 nodes by Degree Centrality: {top_3_degree_centrality}')
+
+# Calculate closeness centrality for all nodes and find the top 3
+closeness_centrality = nx.closeness_centrality(G)
+top_3_closeness_centrality = sorted(closeness_centrality.items(), key=lambda x: x[1], reverse=True)[:3]
+print(f'Top 3 nodes by Closeness Centrality: {top_3_closeness_centrality}')
+
+# Calculate betweenness centrality for all nodes and find the top 3
+betweenness_centrality = nx.betweenness_centrality(G)
+top_3_betweenness_centrality = sorted(betweenness_centrality.items(), key=lambda x: x[1], reverse=True)[:3]
+print(f'Top 3 nodes by Betweenness Centrality: {top_3_betweenness_centrality}')
+
+# Plot degree centrality distribution
+plt.figure(figsize=(10, 6))
+plt.hist(list(degree_centrality.values()), bins=20)
+plt.title('Degree Centrality Distribution')
+plt.xlabel('Degree Centrality')
+plt.ylabel('Frequency')
+plt.show()
+
+# Plot closeness centrality distribution
+plt.figure(figsize=(10, 6))
+plt.hist(list(closeness_centrality.values()), bins=20)
+plt.title('Closeness Centrality Distribution')
+plt.xlabel('Closeness Centrality')
+plt.ylabel('Frequency')
+plt.show()
+
+# Plot betweenness centrality distribution
+plt.figure(figsize=(10, 6))
+plt.hist(list(betweenness_centrality.values()), bins=20)
+plt.title('Betweenness Centrality Distribution')
+plt.xlabel('Betweenness Centrality')
+plt.ylabel('Frequency')
+plt.show()
