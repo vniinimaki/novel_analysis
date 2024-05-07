@@ -1,6 +1,10 @@
 import nltk
 import networkx as nx
 import matplotlib.pyplot as plt
+import powerlaw
+import community as community_louvain
+import matplotlib.cm as cm
+
 # Open the file with character names
 with open('characters.txt', 'r', encoding='utf-8') as f:
     characters = [line.lower().strip().split(',') for line in f]
@@ -118,3 +122,45 @@ plt.title('Betweenness Centrality Distribution')
 plt.xlabel('Betweenness Centrality')
 plt.ylabel('Frequency')
 plt.show()
+
+# Fit the degree centrality distribution to a power law and compare with exponential distribution
+fit_degree = powerlaw.Fit(list(degree_centrality.values()))
+R, p = fit_degree.distribution_compare('power_law', 'exponential')
+print(f'Degree Centrality: p-value for power law fit compared to exponential = {p}')
+
+# Fit the closeness centrality distribution to a power law and compare with exponential distribution
+fit_closeness = powerlaw.Fit(list(closeness_centrality.values()))
+R, p = fit_closeness.distribution_compare('power_law', 'exponential')
+print(f'Closeness Centrality: p-value for power law fit compared to exponential = {p}')
+
+# Fit the betweenness centrality distribution to a power law and compare with exponential distribution
+fit_betweenness = powerlaw.Fit(list(betweenness_centrality.values()))
+R, p = fit_betweenness.distribution_compare('power_law', 'exponential')
+print(f'Betweenness Centrality: p-value for power law fit compared to exponential = {p}')
+
+# Fit the degree centrality distribution to an exponentially truncated power law and compare with exponential distribution
+R, p = fit_degree.distribution_compare('power_law', 'exponential', normalized_ratio=True)
+print(f'Degree Centrality: p-value for exponentially truncated power law fit compared to exponential = {p}')
+
+# Fit the closeness centrality distribution to an exponentially truncated power law and compare with exponential distribution
+R, p = fit_closeness.distribution_compare('power_law', 'exponential', normalized_ratio=True)
+print(f'Closeness Centrality: p-value for exponentially truncated power law fit compared to exponential = {p}')
+
+# Fit the betweenness centrality distribution to an exponentially truncated power law and compare with exponential distribution
+R, p = fit_betweenness.distribution_compare('power_law', 'exponential', normalized_ratio=True)
+print(f'Betweenness Centrality: p-value for exponentially truncated power law fit compared to exponential = {p}')
+
+# Compute the best partition using the Louvain method
+partition = community_louvain.best_partition(G)
+
+# Visualize the graph with nodes colored by community
+plt.figure(figsize=(10, 10))
+pos = nx.spring_layout(G)
+cmap = plt.get_cmap('viridis', max(partition.values()) + 1)
+nx.draw_networkx_nodes(G, pos, partition.keys(), node_size=40, cmap=cmap, node_color=list(partition.values()))
+nx.draw_networkx_edges(G, pos, alpha=0.5)
+plt.show()
+
+# Compute the modularity of the partition
+modularity = community_louvain.modularity(partition, G)
+print(f'Modularity: {modularity}')
