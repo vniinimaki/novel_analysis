@@ -41,8 +41,6 @@ for sentence in sentences:
                     G.add_edge(characters_in_sentence[i], characters_in_sentence[j], weight=1)
 
 
-
-
 # Calculate the maximum weight
 max_weight = max(G[u][v]['weight'] for u, v in G.edges())
 
@@ -154,11 +152,23 @@ print(f'Betweenness Centrality: p-value for exponentially truncated power law fi
 partition = community_louvain.best_partition(G)
 
 # Visualize the graph with nodes colored by community
-plt.figure(figsize=(10, 10))
+fig, ax = plt.subplots(figsize=(10, 10))
 pos = nx.spring_layout(G)
 cmap = plt.get_cmap('viridis', max(partition.values()) + 1)
-nx.draw_networkx_nodes(G, pos, partition.keys(), node_size=40, cmap=cmap, node_color=list(partition.values()))
-nx.draw_networkx_edges(G, pos, alpha=0.5)
+
+# Draw nodes with labels
+nx.draw_networkx_nodes(G, pos, partition.keys(), node_size=40, cmap=cmap, node_color=list(partition.values()), ax=ax)
+nx.draw_networkx_labels(G, pos, ax=ax)
+
+# Draw edges, color them by the community of their source node
+edge_colors = [partition[edge[0]] for edge in G.edges()]
+nx.draw_networkx_edges(G, pos, alpha=0.5, edge_color=edge_colors, edge_cmap=cmap, ax=ax)
+
+# Create a legend
+sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=min(partition.values()), vmax=max(partition.values())))
+sm.set_array([])
+plt.colorbar(sm, ticks=range(max(partition.values()) + 1), label='Community', ax=ax)
+
 plt.show()
 
 # Compute the modularity of the partition
