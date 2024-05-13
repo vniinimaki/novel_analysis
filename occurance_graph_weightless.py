@@ -41,6 +41,15 @@ nx.draw(G, pos, with_labels=True, font_weight='bold')
 
 plt.show()
 
+# Calculate and print the number of nodes
+num_nodes = G.number_of_nodes()
+print(f'Number of nodes: {num_nodes}')
+
+# Calculate and print the number of edges
+num_edges = G.number_of_edges()
+print(f'Number of edges: {num_edges}')
+
+
 if nx.is_connected(G):
     diameter = nx.diameter(G)
     print(f'Diameter: {diameter}')

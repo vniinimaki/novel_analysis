@@ -57,6 +57,14 @@ nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
 plt.show()
 
+# Calculate and print the number of nodes
+num_nodes = G.number_of_nodes()
+print(f'Number of nodes: {num_nodes}')
+
+# Calculate and print the number of edges
+num_edges = G.number_of_edges()
+print(f'Number of edges: {num_edges}')
+
 # Calculate the diameter of the graph
 if nx.is_connected(G):
     diameter = nx.diameter(G)
